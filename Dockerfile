@@ -2,7 +2,12 @@ FROM node:20.11.1-alpine
 
 WORKDIR /usr/src/app
 
-RUN apk --no-cache add tzdata && \
+# ビルドツールのインストール
+RUN apk --no-cache add \
+    tzdata \
+    python3 \
+    make \
+    g++ && \
     cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime && \
     apk del tzdata
 
