@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__chrome-devtools__new_page",
+      "Bash(npx lighthouse:*)"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "chrome-devtools"
+  ]
+}
