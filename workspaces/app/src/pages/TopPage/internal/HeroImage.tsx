@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Mesh, OrthographicCamera, PlaneGeometry, Scene, ShaderMaterial, TextureLoader, WebGLRenderer } from 'three';
 
-import { IMAGE_SRC } from './ImageSrc';
+const IMAGE_SRC = '/assets/hero.png';
 
 const _Wrapper = styled.div`
   aspect-ratio: 16 / 9;
