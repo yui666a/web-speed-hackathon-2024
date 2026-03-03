@@ -16,6 +16,7 @@ import { ClientApp } from '@wsh-2024/app/src/index';
 import { getDayOfWeekStr } from '@wsh-2024/app/src/lib/date/getDayOfWeekStr';
 
 import { INDEX_HTML_PATH } from '../../constants/paths';
+import { getEntryAssets } from '../../utils/viteManifest';
 
 const app = new Hono();
 
@@ -41,6 +42,13 @@ async function createInjectDataStr(): Promise<Record<string, unknown>> {
   return json;
 }
 
+function getViteAssetTags(): { scriptTags: string; linkTags: string } {
+  const { scripts, styles } = getEntryAssets('src/index.tsx');
+  const scriptTags = scripts.map((src) => `<script type="module" src="${src}"></script>`).join('\n    ');
+  const linkTags = styles.map((href) => `<link rel="stylesheet" href="${href}">`).join('\n    ');
+  return { scriptTags, linkTags };
+}
+
 async function createHTML({
   body,
   injectData,
@@ -52,9 +60,13 @@ async function createHTML({
 }): Promise<string> {
   const htmlContent = await fs.readFile(INDEX_HTML_PATH, 'utf-8');
 
+  const { scriptTags, linkTags } = getViteAssetTags();
+
   const content = htmlContent
     .replaceAll('<div id="root"></div>', `<div id="root">${body}</div>`)
     .replaceAll('<style id="tag"></style>', styleTags)
+    .replaceAll('<!-- VITE_SCRIPTS -->', scriptTags)
+    .replaceAll('<!-- VITE_STYLES -->', linkTags)
     .replaceAll(
       '<script id="inject-data" type="application/json"></script>',
       `<script id="inject-data" type="application/json">
