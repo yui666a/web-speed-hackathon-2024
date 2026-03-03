@@ -1,4 +1,4 @@
-FROM node:20.11.1-bookworm
+FROM node:22-bookworm
 
 # Chrome / Lighthouse / native-module build deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
