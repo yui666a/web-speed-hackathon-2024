@@ -6,7 +6,7 @@ import jsesc from 'jsesc';
 import ReactDOMServer from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
 import { ServerStyleSheet } from 'styled-components';
-import { unstable_serialize } from 'swr';
+import { SWRConfig, unstable_serialize } from 'swr';
 
 import { featureApiClient } from '@wsh-2024/app/src/features/feature/apiClient/featureApiClient';
 import { rankingApiClient } from '@wsh-2024/app/src/features/ranking/apiClient/rankingApiClient';
@@ -87,9 +87,11 @@ app.get('*', async (c) => {
   try {
     const body = ReactDOMServer.renderToString(
       sheet.collectStyles(
-        <StaticRouter location={c.req.path}>
-          <ClientApp />
-        </StaticRouter>,
+        <SWRConfig value={{ fallback: injectData, suspense: true }}>
+          <StaticRouter location={c.req.path}>
+            <ClientApp />
+          </StaticRouter>
+        </SWRConfig>,
       ),
     );
 
