@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useEffect, useId, useState } from 'react';
+import { Suspense, useCallback, useId, useState } from 'react';
 
 import { useBookList } from '../../features/book/hooks/useBookList';
 import { Box } from '../../foundation/components/Box';
@@ -13,7 +13,6 @@ const SearchPage: React.FC = () => {
 
   const searchResultsA11yId = useId();
 
-  const [isClient, setIsClient] = useState(false);
   const [keyword, setKeyword] = useState('');
 
   const onChangedInput = useCallback(
@@ -23,13 +22,9 @@ const SearchPage: React.FC = () => {
     [setKeyword],
   );
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   return (
     <Box px={Space * 2}>
-      <Input disabled={!isClient} onChange={onChangedInput} />
+      <Input onChange={onChangedInput} />
       <Box aria-labelledby={searchResultsA11yId} as="section" maxWidth="100%" py={Space * 2} width="100%">
         <Text color={Color.MONO_100} id={searchResultsA11yId} typography={Typography.NORMAL20} weight="bold">
           検索結果
