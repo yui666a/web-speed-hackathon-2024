@@ -6,7 +6,8 @@ type Params = {
 };
 
 export function getImageUrl({ format, height, imageId, width }: Params): string {
-  const url = new URL(`/images/${imageId}`, location.href);
+  const base = typeof location !== 'undefined' ? location.href : 'http://localhost:8000';
+  const url = new URL(`/images/${imageId}`, base);
 
   url.searchParams.set('format', format);
   if (width != null) {
