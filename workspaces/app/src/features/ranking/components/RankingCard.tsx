@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import styled from 'styled-components';
 
 import { SvgIcon } from '../../../features/icons/components/SvgIcon';
@@ -41,8 +40,7 @@ type Props = {
   book: BookCardData;
 };
 
-const RankingCard: React.FC<Props> = ({ book }) => {
-
+export const RankingCard: React.FC<Props> = ({ book }) => {
   const imageUrl = useImage({ height: 96, imageId: book.image.id, width: 96 });
   const authorImageUrl = useImage({ height: 32, imageId: book.author.image.id, width: 32 });
 
@@ -51,11 +49,9 @@ const RankingCard: React.FC<Props> = ({ book }) => {
       <_Link href={`/books/${book.id}`}>
         <Spacer height={Space * 1.5} />
         <Flex align="flex-start" gap={Space * 2.5} justify="flex-start">
-          {imageUrl != null && (
-            <_ImgWrapper>
-              <Image alt={book.name} height={96} objectFit="cover" src={imageUrl} width={96} />
-            </_ImgWrapper>
-          )}
+          <_ImgWrapper>
+            <Image alt={book.name} height={96} objectFit="cover" src={imageUrl} width={96} />
+          </_ImgWrapper>
           <Box width="100%">
             <Flex align="flex-start" direction="column" gap={Space * 1} justify="flex-start">
               <Text color={Color.MONO_100} typography={Typography.NORMAL16} weight="bold">
@@ -69,17 +65,15 @@ const RankingCard: React.FC<Props> = ({ book }) => {
             <Spacer height={Space * 1} />
 
             <Flex align="center" gap={Space * 1} justify="flex-end">
-              {authorImageUrl != null && (
-                <_AvatarWrapper>
-                  <Image
-                    alt={`${book.author.name}のアイコン`}
-                    height={32}
-                    objectFit="cover"
-                    src={authorImageUrl}
-                    width={32}
-                  />
-                </_AvatarWrapper>
-              )}
+              <_AvatarWrapper>
+                <Image
+                  alt={`${book.author.name}のアイコン`}
+                  height={32}
+                  objectFit="cover"
+                  src={authorImageUrl}
+                  width={32}
+                />
+              </_AvatarWrapper>
               <Text color={Color.MONO_80} typography={Typography.NORMAL12}>
                 {book.author.name}
               </Text>
@@ -101,13 +95,3 @@ const RankingCard: React.FC<Props> = ({ book }) => {
     </_Wrapper>
   );
 };
-
-const RankingCardWithSuspense: React.FC<Props> = (props) => {
-  return (
-    <Suspense fallback={null}>
-      <RankingCard {...props} />
-    </Suspense>
-  );
-};
-
-export { RankingCardWithSuspense as RankingCard };

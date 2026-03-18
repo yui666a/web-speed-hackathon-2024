@@ -66,9 +66,7 @@ const BookDetailPage: React.FC = () => {
   return (
     <Box height="100%" position="relative" px={Space * 2}>
       <_HeadingWrapper aria-label="作品情報">
-        {bookImageUrl != null && (
-          <Image alt={book.name} height={256} objectFit="cover" src={bookImageUrl} width={192} />
-        )}
+        <Image alt={book.name} height={256} objectFit="cover" src={bookImageUrl} width={192} />
         <Flex align="flex-start" direction="column" gap={Space * 1} justify="flex-end">
           <Box>
             <Text color={Color.MONO_100} typography={Typography.NORMAL20} weight="bold">
@@ -83,11 +81,9 @@ const BookDetailPage: React.FC = () => {
           <Spacer height={Space * 1} />
 
           <_AuthorWrapper href={`/authors/${book.author.id}`}>
-            {auhtorImageUrl != null && (
-              <_AvatarWrapper>
-                <Image alt={book.author.name} height={32} objectFit="cover" src={auhtorImageUrl} width={32} />
-              </_AvatarWrapper>
-            )}
+            <_AvatarWrapper>
+              <Image alt={book.author.name} height={32} objectFit="cover" src={auhtorImageUrl} width={32} />
+            </_AvatarWrapper>
             <Text color={Color.MONO_100} typography={Typography.NORMAL14}>
               {book.author.name}
             </Text>

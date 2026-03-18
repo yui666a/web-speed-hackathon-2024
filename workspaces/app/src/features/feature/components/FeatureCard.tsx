@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { styled } from 'styled-components';
 
 import { Flex } from '../../../foundation/components/Flex';
@@ -47,17 +46,15 @@ type Props = {
   book: BookCardData;
 };
 
-const FeatureCard: React.FC<Props> = ({ book }) => {
+export const FeatureCard: React.FC<Props> = ({ book }) => {
   const imageUrl = useImage({ height: 96, imageId: book.image.id, width: 96 });
   const authorImageUrl = useImage({ height: 32, imageId: book.author.image.id, width: 32 });
 
   return (
     <_Wrapper href={`/books/${book.id}`}>
-      {imageUrl != null && (
-        <_ImgWrapper>
-          <Image alt={book.image.alt} height={96} objectFit="cover" src={imageUrl} width={96} />
-        </_ImgWrapper>
-      )}
+      <_ImgWrapper>
+        <Image alt={book.image.alt} height={96} objectFit="cover" src={imageUrl} width={96} />
+      </_ImgWrapper>
 
       <_ContentWrapper>
         <Text color={Color.MONO_100} typography={Typography.NORMAL16} weight="bold">
@@ -68,11 +65,9 @@ const FeatureCard: React.FC<Props> = ({ book }) => {
         </Text>
 
         <Flex align="center" gap={Space * 1} justify="flex-end">
-          {authorImageUrl != null && (
-            <_AvatarWrapper>
-              <Image alt={book.author.name} height={32} objectFit="cover" src={authorImageUrl} width={32} />
-            </_AvatarWrapper>
-          )}
+          <_AvatarWrapper>
+            <Image alt={book.author.name} height={32} objectFit="cover" src={authorImageUrl} width={32} />
+          </_AvatarWrapper>
           <Text color={Color.MONO_100} typography={Typography.NORMAL14}>
             {book.author.name}
           </Text>
@@ -81,13 +76,3 @@ const FeatureCard: React.FC<Props> = ({ book }) => {
     </_Wrapper>
   );
 };
-
-const FeatureCardWithSuspense: React.FC<Props> = (props) => {
-  return (
-    <Suspense fallback={null}>
-      <FeatureCard {...props} />
-    </Suspense>
-  );
-};
-
-export { FeatureCardWithSuspense as FeatureCard };

@@ -43,11 +43,9 @@ const AuthorDetailPage: React.FC = () => {
   return (
     <Box height="100%" px={Space * 2}>
       <_HeadingWrapper aria-label="作者情報">
-        {imageUrl != null && (
-          <_AuthorImageWrapper>
-            <Image key={author.id} alt={author.name} height={128} objectFit="cover" src={imageUrl} width={128} />
-          </_AuthorImageWrapper>
-        )}
+        <_AuthorImageWrapper>
+          <Image key={author.id} alt={author.name} height={128} objectFit="cover" src={imageUrl} width={128} />
+        </_AuthorImageWrapper>
 
         <Flex align="flex-start" direction="column" gap={Space * 1} justify="flex-start">
           <Text color={Color.MONO_100} typography={Typography.NORMAL20} weight="bold">
