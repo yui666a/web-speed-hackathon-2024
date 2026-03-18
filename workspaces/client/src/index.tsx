@@ -6,6 +6,18 @@ import { ClientApp } from '@wsh-2024/app/src/index';
 
 import { registerServiceWorker } from './utils/registerServiceWorker';
 
+function getInjectData(): Record<string, unknown> {
+  try {
+    const el = document.getElementById('inject-data');
+    if (el?.textContent) {
+      return JSON.parse(el.textContent);
+    }
+  } catch {
+    // ignore parse errors
+  }
+  return {};
+}
+
 const main = async () => {
   registerServiceWorker();
 
@@ -15,9 +27,10 @@ const main = async () => {
     const { AdminApp } = await import('@wsh-2024/admin/src/index');
     ReactDOM.createRoot(root).render(<AdminApp />);
   } else {
+    const fallback = getInjectData();
     ReactDOM.hydrateRoot(
       root,
-      <SWRConfig value={{ revalidateIfStale: true, revalidateOnFocus: false, revalidateOnReconnect: false }}>
+      <SWRConfig value={{ fallback, revalidateIfStale: false, revalidateOnFocus: false, revalidateOnReconnect: false }}>
         <BrowserRouter>
           <ClientApp />
         </BrowserRouter>
