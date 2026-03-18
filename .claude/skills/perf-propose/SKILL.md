@@ -149,13 +149,3 @@ perf-measure の計測結果を入力として、スコアリング配点を考�
 2. **Service Worker を register すること** - SW を削除する施策は NG
 3. **漫画ページ画像の難読化必須** - 画像を平文で配信する施策は NG
 4. **`POST /api/v1/initialize` で DB リセットできること** - DB 構造を壊す施策は NG
-
-## このプロジェクトの既知の問題点
-
-CLAUDE.md に記載されている意図的なパフォーマンス問題。施策のヒントとして活用する：
-
-- 大量の不要 polyfill（core-js, es5/6/7-shim, regenerator-runtime）
-- 重いライブラリ（three.js, canvaskit-wasm, jQuery, lodash, moment-timezone）
-- 未最適化画像（14MB SVG ロゴ、大量の WOFF フォント）
-- ミニファイ無効、ツリーシェイキング無効の tsup 設定
-- 非効率な画像処理（jimp, image-js）
