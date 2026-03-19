@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
-import { SvgIcon } from '../../../features/icons/components/SvgIcon';
+import { FavoriteBorderIcon } from '../../../features/icons/components/FavoriteBorderIcon';
+import { FavoriteIcon } from '../../../features/icons/components/FavoriteIcon';
 import { Color, Space } from '../../../foundation/styles/variables';
 
 const _Button = styled.button<{ $outlined: boolean }>`
@@ -28,12 +29,11 @@ export const FavButton: React.FC<Props> = ({ enabled, onClick }) => {
       aria-label={enabled ? 'お気に入りを解除する' : 'お気に入りに追加する'}
       onClick={onClick}
     >
-      <SvgIcon
-        color={enabled ? Color.Favorite : Color.MONO_40}
-        height={24}
-        type={enabled ? 'Favorite' : 'FavoriteBorder'}
-        width={24}
-      />
+      {enabled ? (
+        <FavoriteIcon color={Color.Favorite} height={24} width={24} />
+      ) : (
+        <FavoriteBorderIcon color={Color.MONO_40} height={24} width={24} />
+      )}
     </_Button>
   );
 };
