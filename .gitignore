@@ -25,3 +25,4 @@ dist-ssr
 
 # for resolving better-sqlite3 problems: https://github.com/WiseLibs/better-sqlite3/issues/866#issuecomment-1457993288
 build
+.claude/settings.local.json

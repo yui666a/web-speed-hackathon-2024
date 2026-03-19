@@ -14,9 +14,20 @@ RUN apk --no-cache add \
 RUN apk --no-cache add jemalloc
 ENV LD_PRELOAD=/usr/lib/libjemalloc.so.2
 
-COPY . .
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY workspaces/client/package.json workspaces/client/
+COPY workspaces/server/package.json workspaces/server/
+COPY workspaces/app/package.json workspaces/app/
+COPY workspaces/admin/package.json workspaces/admin/
+COPY workspaces/schema/package.json workspaces/schema/
+COPY workspaces/image-encrypt/package.json workspaces/image-encrypt/
+COPY workspaces/testing/package.json workspaces/testing/
+
 RUN corepack enable pnpm
 RUN pnpm install
+RUN cd node_modules/.pnpm/better-sqlite3@9.3.0/node_modules/better-sqlite3 && npx --yes prebuild-install -r napi || npx --yes node-gyp rebuild --release
+
+COPY . .
 RUN pnpm build
 
 ENV PORT 8000
