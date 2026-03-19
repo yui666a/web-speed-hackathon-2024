@@ -8,6 +8,9 @@ import { StaticRouter } from 'react-router-dom/server';
 import { ServerStyleSheet } from 'styled-components';
 import { SWRConfig, unstable_serialize } from 'swr';
 
+import { authorApiClient } from '@wsh-2024/app/src/features/author/apiClient/authorApiClient';
+import { bookApiClient } from '@wsh-2024/app/src/features/book/apiClient/bookApiClient';
+import { episodeApiClient } from '@wsh-2024/app/src/features/episode/apiClient/episodeApiClient';
 import { featureApiClient } from '@wsh-2024/app/src/features/feature/apiClient/featureApiClient';
 import { rankingApiClient } from '@wsh-2024/app/src/features/ranking/apiClient/rankingApiClient';
 import { releaseApiClient } from '@wsh-2024/app/src/features/release/apiClient/releaseApiClient';
@@ -19,7 +22,7 @@ import { getEntryAssets } from '../../utils/viteManifest';
 
 const app = new Hono();
 
-async function createInjectDataStr(): Promise<Record<string, unknown>> {
+async function createInjectDataStr(path: string): Promise<Record<string, unknown>> {
   const json: Record<string, unknown> = {};
 
   {
@@ -36,6 +39,52 @@ async function createInjectDataStr(): Promise<Record<string, unknown>> {
   {
     const ranking = await rankingApiClient.fetchList({ query: {} });
     json[unstable_serialize(rankingApiClient.fetchList$$key({ query: {} }))] = ranking;
+  }
+
+  // ルート固有データの取得（LCP 画像を SSR HTML に含めるため）
+  try {
+    const bookMatch = path.match(/^\/books\/([^/]+)$/);
+    const episodeMatch = path.match(/^\/books\/([^/]+)\/episodes\/([^/]+)$/);
+    const authorMatch = path.match(/^\/authors\/([^/]+)$/);
+
+    if (episodeMatch) {
+      const bookId = episodeMatch[1]!;
+      const episodeId = episodeMatch[2]!;
+      const [book, episode] = await Promise.all([
+        bookApiClient.fetch({ params: { bookId } }),
+        episodeApiClient.fetch({ params: { episodeId } }),
+      ]);
+      json[unstable_serialize(bookApiClient.fetch$$key({ params: { bookId } }))] = book;
+      json[unstable_serialize(episodeApiClient.fetch$$key({ params: { episodeId } }))] = episode;
+      // 各エピソード個別データも注入（EpisodeListItem が useEpisode を呼ぶため）
+      const episodeDetails = await Promise.all(
+        (book.episodes ?? []).map((ep: { id: string }) => episodeApiClient.fetch({ params: { episodeId: ep.id } })),
+      );
+      for (const ep of episodeDetails) {
+        json[unstable_serialize(episodeApiClient.fetch$$key({ params: { episodeId: ep.id } }))] = ep;
+      }
+    } else if (bookMatch) {
+      const bookId = bookMatch[1]!;
+      const [book, episodeList] = await Promise.all([
+        bookApiClient.fetch({ params: { bookId } }),
+        episodeApiClient.fetchList({ query: { bookId } }),
+      ]);
+      json[unstable_serialize(bookApiClient.fetch$$key({ params: { bookId } }))] = book;
+      json[unstable_serialize(episodeApiClient.fetchList$$key({ query: { bookId } }))] = episodeList;
+      // 各エピソード個別データも注入（EpisodeListItem が useEpisode を呼ぶため）
+      const episodeDetails = await Promise.all(
+        episodeList.map((ep) => episodeApiClient.fetch({ params: { episodeId: ep.id } })),
+      );
+      for (const ep of episodeDetails) {
+        json[unstable_serialize(episodeApiClient.fetch$$key({ params: { episodeId: ep.id } }))] = ep;
+      }
+    } else if (authorMatch) {
+      const authorId = authorMatch[1]!;
+      const author = await authorApiClient.fetch({ params: { authorId } });
+      json[unstable_serialize(authorApiClient.fetch$$key({ params: { authorId } }))] = author;
+    }
+  } catch {
+    // ルート固有データの取得失敗はページ表示に影響しない（クライアントが再取得する）
   }
 
   return json;
@@ -81,7 +130,7 @@ async function createHTML({
 }
 
 app.get('*', async (c) => {
-  const injectData = await createInjectDataStr();
+  const injectData = await createInjectDataStr(c.req.path);
   const sheet = new ServerStyleSheet();
 
   try {

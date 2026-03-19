@@ -66,7 +66,7 @@ const BookDetailPage: React.FC = () => {
   return (
     <Box height="100%" position="relative" px={Space * 2}>
       <_HeadingWrapper aria-label="作品情報">
-        <Image alt={book.name} height={256} objectFit="cover" src={bookImageUrl} width={192} />
+        <Image alt={book.name} fetchpriority="high" height={256} objectFit="cover" src={bookImageUrl} width={192} />
         <Flex align="flex-start" direction="column" gap={Space * 1} justify="flex-end">
           <Box>
             <Text color={Color.MONO_100} typography={Typography.NORMAL20} weight="bold">

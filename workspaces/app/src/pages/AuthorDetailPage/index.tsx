@@ -44,7 +44,7 @@ const AuthorDetailPage: React.FC = () => {
     <Box height="100%" px={Space * 2}>
       <_HeadingWrapper aria-label="作者情報">
         <_AuthorImageWrapper>
-          <Image key={author.id} alt={author.name} height={128} objectFit="cover" src={imageUrl} width={128} />
+          <Image key={author.id} alt={author.name} fetchpriority="high" height={128} objectFit="cover" src={imageUrl} width={128} />
         </_AuthorImageWrapper>
 
         <Flex align="flex-start" direction="column" gap={Space * 1} justify="flex-start">
